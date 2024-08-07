@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -7,6 +8,9 @@ plugins {
 
 group = property("group")!!
 version = property("version")!!
+
+val paper_version: String by project
+val icemmand_version: String by project
 
 repositories {
     mavenCentral()
@@ -18,15 +22,33 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
-    implementation("xyz.icetang.lib:icemmand-api:${property(("icemmand_version"))}")
-    compileOnly("io.papermc.paper:paper-api:${property("paper_version")}-R0.1-SNAPSHOT")
+    implementation("xyz.icetang.lib:icemmand-api:${icemmand_version}")
+    compileOnly("io.papermc.paper:paper-api:${paper_version}-R0.1-SNAPSHOT")
 }
 
 java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 tasks {
+    withType<JavaCompile> {
+        options.encoding = "UTF-8"
+    }
+
+    withType<KotlinCompile> {
+        compilerOptions {
+            noJdk = false
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
+    }
+
     processResources {
         filesMatching("plugin.yml") {
             expand(project.properties)
