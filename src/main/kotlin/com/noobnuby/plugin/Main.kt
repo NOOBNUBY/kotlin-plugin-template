@@ -3,6 +3,7 @@ package com.noobnuby.plugin
 import com.noobnuby.plugin.commands.Hello
 import com.noobnuby.plugin.commands.HelloBrigadier
 import com.noobnuby.plugin.events.Join
+import com.noobnuby.plugin.utils.commands
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.icetang.lib.icemmand.icemmand
 
@@ -18,7 +19,9 @@ class Main : JavaPlugin() {
             Hello.register(this)
         }
 
-        HelloBrigadier.registerCommand()
+        commands {
+            HelloBrigadier.register()
+        }
 
         server.pluginManager.apply {
             registerEvents(Join(),this@Main)
